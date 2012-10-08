@@ -36,6 +36,11 @@ void BinaryEncoder::init(OutputStream& os)
     out_.reset(os);
 }
 
+StreamWriter &BinaryEncoder::getStreamWriter()
+{
+    return out_;
+}
+
 void BinaryEncoder::flush()
 {
     out_.flush();

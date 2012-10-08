@@ -30,6 +30,7 @@ class BinaryEncoder : public Encoder {
     uint8_t *end_;
 
     void init(OutputStream& os);
+    StreamWriter &getStreamWriter();
     void flush();
     void encodeNull();
     void encodeBool(bool b);
