@@ -341,17 +341,18 @@ struct StreamWriter {
      * Writes a single byte.
      */
     void write(uint8_t c) {
+        bytesWritten_++;
         if (next_ == end_) {
             more();
         }
         *next_++ = c;
-        bytesWritten_++;
     }
 
     /**
      * Writes the specified number of bytes starting at \p b.
      */
     void writeBytes(const uint8_t* b, size_t n) {
+        bytesWritten_ += n;
         while (n > 0) {
             if (next_ == end_) {
                 more();
@@ -365,7 +366,6 @@ struct StreamWriter {
             b += q;
             n -= q;
         }
-        bytesWritten_ += n;
     }
 
     /**
