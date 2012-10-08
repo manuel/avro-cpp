@@ -311,6 +311,10 @@ public:
         sep2();
     }
 
+    StreamWriter &getStreamWriter() {
+        return out_;
+    }
+
 };
 
 }

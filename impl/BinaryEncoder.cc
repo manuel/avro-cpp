@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-#include "Encoder.hh"
+#include "BinaryEncoder.hh"
 #include "Zigzag.hh"
 #include <boost/array.hpp>
 #include <boost/make_shared.hpp>
@@ -26,34 +26,6 @@ namespace avro {
 using boost::make_shared;
 using boost::shared_ptr;
 
-class BinaryEncoder : public Encoder {
-    StreamWriter out_;
-    uint8_t *next_;
-    uint8_t *end_;
-
-    void init(OutputStream& os);
-    void flush();
-    void encodeNull();
-    void encodeBool(bool b);
-    void encodeInt(int32_t i);
-    void encodeLong(int64_t l);
-    void encodeFloat(float f);
-    void encodeDouble(double d);
-    void encodeString(const std::string& s);
-    void encodeBytes(const uint8_t *bytes, size_t len);
-    void encodeFixed(const uint8_t *bytes, size_t len);
-    void encodeEnum(size_t e);
-    void arrayStart();
-    void arrayEnd();
-    void mapStart();
-    void mapEnd();
-    void setItemCount(size_t count);
-    void startItem();
-    void encodeUnionIndex(size_t e);
-
-    void doEncodeLong(int64_t l);
-};
-
 EncoderPtr binaryEncoder()
 {
     return make_shared<BinaryEncoder>();
@@ -62,6 +34,11 @@ EncoderPtr binaryEncoder()
 void BinaryEncoder::init(OutputStream& os)
 {
     out_.reset(os);
+}
+
+StreamWriter &BinaryEncoder::getStreamWriter()
+{
+    return out_;
 }
 
 void BinaryEncoder::flush()

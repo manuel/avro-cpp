@@ -311,9 +311,14 @@ struct StreamWriter {
     uint8_t* end_;
 
     /**
+     * The number of bytes written so far to this writer.
+     */
+    size_t bytesWritten_;
+
+    /**
      * Constructs a writer with no underlying stream.
      */
-    StreamWriter() : out_(0), next_(0), end_(0) { }
+    StreamWriter() : out_(0), next_(0), end_(0), bytesWritten_(0) { }
 
     /**
      * Constructs a new writer with the given underlying stream.
@@ -336,6 +341,7 @@ struct StreamWriter {
      * Writes a single byte.
      */
     void write(uint8_t c) {
+        bytesWritten_++;
         if (next_ == end_) {
             more();
         }
@@ -346,6 +352,7 @@ struct StreamWriter {
      * Writes the specified number of bytes starting at \p b.
      */
     void writeBytes(const uint8_t* b, size_t n) {
+        bytesWritten_ += n;
         while (n > 0) {
             if (next_ == end_) {
                 more();
@@ -385,6 +392,15 @@ struct StreamWriter {
             }
         }
         throw Exception("EOF reached");
+    }
+
+    /**
+     * Returns the number of bytes written so far to this writer.
+     *
+     * Dealing with overflow is the responsibility of the caller.
+     */
+    size_t getBytesWritten() {
+      return bytesWritten_;
     }
 
 };
