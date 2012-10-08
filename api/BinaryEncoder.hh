@@ -30,7 +30,6 @@ class BinaryEncoder : public Encoder {
     uint8_t *end_;
 
     void init(OutputStream& os);
-    StreamWriter &getStreamWriter();
     void flush();
     void encodeNull();
     void encodeBool(bool b);
@@ -51,6 +50,9 @@ class BinaryEncoder : public Encoder {
     void encodeUnionIndex(size_t e);
 
     void doEncodeLong(int64_t l);
+
+public:
+    StreamWriter &getStreamWriter();
 };
 
 } // namespace avro
