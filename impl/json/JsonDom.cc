@@ -16,14 +16,14 @@
  * limitations under the License.
  */
 
-#include "JsonDom.hh"
+#include "json/JsonDom.hh"
 
 #include <stdexcept>
 
 #include <string.h>
 
 #include "Stream.hh"
-#include "JsonIO.hh"
+#include "json/JsonIO.hh"
 
 namespace avro {
 namespace json {

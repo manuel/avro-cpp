@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-#include "JsonIO.hh"
+#include "json/JsonIO.hh"
 
 namespace avro {
 namespace json {

@@ -32,9 +32,10 @@
 #include "ValidSchema.hh"
 #include "Decoder.hh"
 #include "Encoder.hh"
+#include "json/JsonEncoder.hh"
 #include "NodeImpl.hh"
 
-#include "../json/JsonIO.hh"
+#include "json/JsonIO.hh"
 
 namespace avro {
 
@@ -52,11 +53,6 @@ using std::istringstream;
 
 using avro::json::JsonParser;
 using avro::json::JsonGenerator;
-
-class JsonGrammarGenerator : public ValidatingGrammarGenerator {
-    Production doGenerate(const NodePtr& n,
-        std::map<NodePtr, boost::shared_ptr<Production> > &m);
-};
 
 static std::string nameOf(const NodePtr& n)
 {
@@ -473,60 +469,6 @@ size_t JsonDecoder<P>::decodeUnionIndex()
     parser_.selectBranch(result);
     return result;
 }
-
-
-class JsonHandler {
-    JsonGenerator& generator_;
-public:
-    JsonHandler(JsonGenerator& g) : generator_(g) { }
-    size_t handle(const Symbol& s) {
-        switch (s.kind()) {
-        case Symbol::sRecordStart:
-            generator_.objectStart();
-            break;
-        case Symbol::sRecordEnd:
-            generator_.objectEnd();
-            break;
-        case Symbol::sField:
-            generator_.encodeString(s.extra<string>());
-            break;
-        default:
-            break;
-        }
-        return 0;
-    }
-};
-
-template <typename P>
-class JsonEncoder : public Encoder {
-    JsonGenerator out_;
-    JsonHandler handler_;
-    P parser_;
-
-    void init(OutputStream& os);
-    void flush();
-    void encodeNull();
-    void encodeBool(bool b);
-    void encodeInt(int32_t i);
-    void encodeLong(int64_t l);
-    void encodeFloat(float f);
-    void encodeDouble(double d);
-    void encodeString(const std::string& s);
-    void encodeBytes(const uint8_t *bytes, size_t len);
-    void encodeFixed(const uint8_t *bytes, size_t len);
-    void encodeEnum(size_t e);
-    void arrayStart();
-    void arrayEnd();
-    void mapStart();
-    void mapEnd();
-    void setItemCount(size_t count);
-    void startItem();
-    void encodeUnionIndex(size_t e);
-public:
-    JsonEncoder(const ValidSchema& schema) :
-        handler_(out_),
-        parser_(JsonGrammarGenerator().generate(schema), NULL, handler_) { }
-};
 
 template<typename P>
 void JsonEncoder<P>::init(OutputStream& os)
